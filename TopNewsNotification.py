@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 
-
+#gets headlines
 def econ():
         url = 'https://www.economist.com'
         source_code = requests.get(url, allow_redirects=False)
@@ -85,24 +85,38 @@ def bbc():
 
     return temp
 
-#adding new
-allNews=econ();
+#gets all new headlines into allnews ################################################333333333333333
+allNews=econ()+nyt()+wsj()+bbc()
+allNews=[x.lower() for x in allNews]
+for line in allNews:
+    print(line)
+print(len(allNews))
 
 
+
+#divides headlines into keywords
 import re
-
+keywords=list()
 for i in range(len(allNews)):
-    print(re.split(r'[/-]+', allNews[i]))
+    keywords += re.split(r'[/-]+| ', allNews[i])
+
+#gets the keywords from the news
+import collections
+from collections import Counter
+counter = collections.Counter(keywords)
+for e in ['split__text">the','32','12,''vh@xs','inline"><span','span><h3','svg><','mr','viewbox="0','blogs.wsj.com','top','16','span><','aria','hidden="true"','special','report', 'story','indicator','politics','opinion','The','all', 'just', 'being', 'over', 'both', 'through', 'yourselves', 'its', 'before', 'herself', 'had', 'should', 'to', 'only', 'under', 'ours', 'has', 'do', 'them', 'his', 'very', 'they', 'not', 'during', 'now', 'him', 'nor', 'did', 'this', 'she', 'each', 'further', 'where', 'few', 'because', 'doing', 'some', 'are', 'our', 'ourselves', 'out', 'what', 'for', 'while', 'does', 'above', 'between', 't', 'be', 'we', 'who', 'were', 'here', 'hers', 'by', 'on', 'about', 'of', 'against', 's', 'or', 'own', 'into', 'yourself', 'down', 'your', 'from', 'her', 'their', 'there', 'been', 'whom', 'too', 'themselves', 'was', 'until', 'more', 'himself', 'that', 'but', 'don', 'with', 'than', 'those', 'he', 'me', 'myself', 'these', 'up', 'will', 'below', 'can', 'theirs', 'my', 'and', 'then', 'is', 'am', 'it', 'an', 'as', 'itself', 'at', 'have', 'in', 'any', 'if', 'again', 'no', 'when', 'same', 'how', 'other', 'which', 'you', 'after', 'most', 'such', 'why', 'a', 'off', 'i', 'yours', 'so', 'the', 'having', 'once']:
+    counter.pop(e,"yes")
+
+#orders the words
+orderedwords=counter.most_common()
+
+#removes the 48 useless
+for i in range(48):
+    orderedwords.pop( 0 )
+
+print(orderedwords)
 
 
 
-
-#print(allNe ws)
-from nltk.corpus import words
-word_list = words.words()
-
-# import re, collections
-# w=["Syria","Trump","Mccain"]
-# pattern = re.compile("|".join(w), flags = re.IGNORECASE)
-# print(collections.Counter(pattern.findall(allNews)))
+#search for news headline
 

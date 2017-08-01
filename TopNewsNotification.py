@@ -119,4 +119,10 @@ print(orderedwords)
 
 
 #search for news headline
-
+keysearch = input('Enter keyword:')
+keysearch=keysearch.lower()
+print('\n\n\n\n\n\n')
+for line in allNews:
+    if(keysearch in line):
+        print(line)
+#track news headlines daily

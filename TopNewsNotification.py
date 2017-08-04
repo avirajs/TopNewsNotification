@@ -138,13 +138,13 @@ sched = BlockingScheduler()
 #         print(line)
 #     print(keywords())
 
-
+links=list()
 text_file = open("newslines.txt", "w")
 #text_file.write('This job is run every weekday at 10am.')
 for line in allNews():
-    text_file.write(line[line.find("http"):line.find('>')-1]+' \n')
-keyw=str(keywords())
-text_file.write(keyw)
+    links.append(line[line.find("http"):line.find('>')-1])
+# keyw=str(keywords())
+# text_file.write(keyw)
 text_file.close()
 
 
@@ -158,3 +158,8 @@ text_file.close()
 #     text_file.close()
 #
 # sched.start()
+
+import yagmail
+yag = yagmail.SMTP('avi030798', 'asinha37')
+contents = links
+yag.send('avi030798@gmail.com', 'email test', contents)

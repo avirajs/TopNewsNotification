@@ -18,7 +18,7 @@ def econ():
         for link in soup.findAll("a", {"itemprop": "url"}):  # {'class': 's-result-item celwidget '}
             href = link.get("href")
 
-            if "http" in link:
+            if "https://www.economist.com" in link:
                 temp.append(link[link.find("href") + 5:])
             else:
                 temp.append(str('https://www.economist.com' + href))
@@ -101,7 +101,7 @@ def words():
     keywords=list()
     headlines=allNews()
     for i in range(len(headlines)):
-        keywords += re.split(r'[/-]+| ', headlines[i])
+        keywords += re.split(r'[<>/-]+| ', headlines[i])
     return keywords
 
 #gets the keywords from the words and orders them
@@ -128,22 +128,33 @@ def keywordSearch():
 
 
 #track news headlines daily
-
 from apscheduler.schedulers.blocking import BlockingScheduler
-
 sched = BlockingScheduler()
 
-@sched.scheduled_job('interval', seconds=10)
-def timed_job():
-    print(allNews())
-    print(keywords())
-    print('This job is run every 10 seconds.')
-    keywordSearch()
+# @sched.scheduled_job('interval', seconds=10)
+# def timed_job():
+#     print('This job is run every weekday at 10am.')
+#     for line in allNews():
+#         print(line)
+#     print(keywords())
 
 
+text_file = open("newslines.txt", "w")
+#text_file.write('This job is run every weekday at 10am.')
+for line in allNews():
+    text_file.write(line[line.find("http"):line.find('>')-1]+' \n')
+keyw=str(keywords())
+text_file.write(keyw)
+text_file.close()
 
-@sched.scheduled_job('cron', day_of_week='mon-fri', hour=10)
-def scheduled_job():
-    print('This job is run every weekday at 10am.')
 
-sched.start()
+# @sched.scheduled_job('cron', day_of_week='mon-sun', hour=10)
+# def scheduled_job():
+#     text_file = open("newslines.txt", "w")
+#     text_file.write('This job is run every weekday at 10am.')
+#     for line in allNews():
+#         text_file.write(line)
+#         text_file.write(keywords())
+#     text_file.close()
+#
+# sched.start()

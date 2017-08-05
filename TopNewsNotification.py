@@ -1,8 +1,10 @@
 import requests
 from bs4 import BeautifulSoup
-
 import re
 import collections
+import time
+import yagmail
+
 from collections import Counter
 
 #gets headlines
@@ -131,35 +133,35 @@ def keywordSearch():
 from apscheduler.schedulers.blocking import BlockingScheduler
 sched = BlockingScheduler()
 
-# @sched.scheduled_job('interval', seconds=10)
+# @sched.scheduled_job('interval', seconds=40)
 # def timed_job():
-#     print('This job is run every weekday at 10am.')
-#     for line in allNews():
-#         print(line)
-#     print(keywords())
-
-links=list()
-text_file = open("newslines.txt", "w")
-#text_file.write('This job is run every weekday at 10am.')
-for line in allNews():
-    links.append(line[line.find("http"):line.find('>')-1])
-# keyw=str(keywords())
-# text_file.write(keyw)
-text_file.close()
-
-
-# @sched.scheduled_job('cron', day_of_week='mon-sun', hour=10)
-# def scheduled_job():
-#     text_file = open("newslines.txt", "w")
-#     text_file.write('This job is run every weekday at 10am.')
-#     for line in allNews():
-#         text_file.write(line)
-#         text_file.write(keywords())
-#     text_file.close()
+#     print('everyy 40')
+#     now = time.strftime("%A")
+#     yag = yagmail.SMTP('avi030798', 'asinha37')
 #
-# sched.start()
+#     links = list()
+#     for line in allNews():
+#         links.append(line[line.find("http"):])
+#     keyw = str(keywords())
+#     links.append(keyw)
+#
+#     contents = links
+#     yag.send('avi030798@gmail.com', now + ' news', contents)
 
-import yagmail
-yag = yagmail.SMTP('avi030798', 'asinha37')
-contents = links
-yag.send('avi030798@gmail.com', 'email test', contents)
+#'This job is run every weekday at 10am.')
+@sched.scheduled_job('cron', day_of_week='mon-sun', hour=19)
+def scheduled_job():
+    print('everyy 7')
+    now = time.strftime("%A")
+    yag = yagmail.SMTP('avi030798', 'asinha37')
+
+    links = list()
+    for line in allNews():
+        links.append(line[line.find("http"):])
+    keyw=str(keywords())
+    links.append(keyw)
+
+    contents = links
+    yag.send('avi030798@gmail.com', now + ' news', contents)
+
+sched.start()
